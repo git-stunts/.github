@@ -1,9 +1,8 @@
+<img alt="Git Stunts" src="https://github.com/user-attachments/assets/6dbfbdd4-e6f8-43cc-b693-3492d173f221" />
+
 # Welcome to Git Stunts
 
 > _Git isn't really a version control system at all._
-
-<img alt="Git Stunts" src="https://github.com/user-attachments/assets/6dbfbdd4-e6f8-43cc-b693-3492d173f221" width="420" align="right" />
-
 
 If you understand that sentence, this series is for you. If you don’t, it will be by the end. Git is really a content-addressable filesystem with a directed acyclic graph (DAG) built on top.
 
