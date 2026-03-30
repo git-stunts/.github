@@ -2,37 +2,39 @@
 <img src="https://github.com/user-attachments/assets/90497885-d7f8-44af-b126-a449ee11e5a9" />
 </div>
 
-# Version control is just Git's day job.
+# Version Control Is Just Git's Day Job
 
-If you understand that sentence, this series is for you. If you don’t, it will be by the end. Git is really a content-addressable filesystem with a directed acyclic graph (DAG) built on top.
+**Git Stunts** is a GitHub org dedicated to pushing Git to its absolute limits. Anyone can use Git as a version control system. Few treat it as raw material for systems engineering experiments.
 
-Most of us interact with Git through the **porcelain**—`push`, `pull`, `commit`—and never touch the **plumbing** underneath. But if you `man git`, you'll find that Git’s true power lies in its plumbing.
+Peer beneath the porcelain and get your hands dirty with Git’s plumbing. Learn to think in systems, subvert familiar tools, and pull off real *Git Stunts*.
 
-**Git Stunts** is a series dedicated to tinkering with that plumbing. We are going to take Git apart and put it back together in ways that were never intended.
+## The Philosophy: Play As Research
 
-This GitHub org is where I'll publish all of the source code modules for the stunts.
+When you want a CMS or a database, your first instinct probably isn't to reach for Git, and that's good. But, hear me out. The goal here isn't conventional efficiency. It's understanding systems from the ground up.
 
-## The Philosophy: Play as Research
+When we use Git to perform these stunts, two things happen:
 
-Why do this? If you’re looking for the most "practical" way to build a CMS or a database, you’d reach for Postgres or Contentful. But the goal here isn't conventional efficiency; it’s **first-principles engineering**.
+First, we get to ask, *"What does this enable that a traditional stack doesn't?"* Git gives us an accidental inheritance of properties like offline-first synchronization, cryptographic provenance, and cheap point-in-time recovery. Those are complex features. They're often entire projects in their own right.
 
-When we use Git to perform these "stunts," two things happen:
-
-**Architectural Divergence:** We get to ask, *"What does this enable that a traditional stack doesn't?"* By using Git as a backend, we accidentally inherit properties like offline-first synchronization, cryptographic non-repudiation, and infinite point-in-time recovery. Those are complex features that take months to build into a standard SQL-based app.
-
-**Technical Mastery:** You will internalize how Git actually handles data, hashes, and refs. You stop memorizing commands and start understanding **state**.
+Second, we internalize how Git actually works. You stop asking *"What does this command do?"* and instead ask *"What can I do with Git's objects, refs, invariants, and transitions?"*
 
 ## Who This Is For
 
-This series is for people who use Git daily and have wondered how it actually works. If you primarily interact with Git through a GUI, it will dramatically deepen your understanding of what those tools are abstracting away. If you’ve ever looked at the Git CLI commands and thought *“what on earth does that one do?”*, this series shines a light into some of Git’s darker corners. And if you’re already reading man pages, tracing code paths, and treating tools as systems rather than products—good. You’ll fit right in.
+This series is for people who know how to use Git but suspect there is a much stranger machine hiding underneath its interface.
 
-If you’re looking for best practices, production checklists, or drop-in architectural advice, this probably isn’t for you. These stunts prioritize understanding over orthodoxy, and curiosity over safety rails.
+If you mostly interact with Git through a GUI, this will show you what the GUI is politely abstracting away. If you have ever looked at a plumbing command and wondered *"What on earth is that for?"*, your inquisitiveness will be rewarded here.
 
-Despite the name, this series isn’t about clever exploits or party tricks. The constraint is the point. By limiting ourselves to Git’s actual primitives, we’re forced to reason carefully about data, state, and invariants.
+And if you already read man pages, inspect raw objects, trace code paths, and treat tools as systems rather than products, welcome home.
 
-These are stunts, not hacks: deliberate, reversible, and grounded in how the system really works. If you’re looking for exploit chains or cinematic “hacker” theatrics, you’re in the wrong place. This is about understanding tools deeply enough that surprising architectures emerge naturally.
+This series is **not** for people looking for best practices, conventional application architecture, production checklists, or boringly sensible defaults. These projects prioritize understanding over orthodoxy and curiosity over safety rails.
 
-If you enjoy taking things apart and putting them back together in new ways, going deep on familiar tools all the way down to their primitives, and you believe that real engineering insight comes from misuse, not memorization, then you’re in exactly the right place.
+## Creativity Comes From Constraints
+
+Despite the name, this series is not about exploits, hacks, or terminal theater. The constraint is the point. By limiting ourselves to Git’s actual primitives, we are forced to reason carefully about data, state, and invariants.
+
+These are **stunts**, not hacks: deliberate, reversible, and grounded in how the system really works. The goal is not to get away with something. The goal is to understand the system well enough that surprising architectures emerge naturally.
+
+If you enjoy taking things apart, putting them back together in strange ways, and learning by misuse rather than memorization, you are in exactly the right place.
 
 ## The "Linus" Threshold
 
@@ -44,7 +46,7 @@ I like to imagine he would secretly still check in every now and then to see if 
 
 We’re going to have some fun. We're going to use the plumbing to build things that shouldn't exist, and in the process, we're going to learn how to think about systems design from the bare metal up.
 
-## What to Expect
+## What To Expect
 
 Each post in this series follows a rigorous **Architecture Decision Record** (ADR) format to ensure that we're not just making a mess, but making a point. Every stunt is reproducible, documented, and intentionally constrained. 
 
@@ -58,29 +60,51 @@ All posts in the series will include:
 
 ## The Set List
 
-| Part | Title | Status | Stunt | Lesson |
-|------|-------|--------|-------|--------|
-| I | Git as CMS | In Review, Pending Publication | Git's `commit-tree` doubles as a DB-less API | How to reduce operational complexity via protocols |
-| II | Git as Key-Value Store | Planned | Offline-first KV-store using OIDs and Git notes | CAP theorem, consistency vs availability in distributed systems | 
-| III | Git as Bus | Planned | Using `post-receive` hooks for serverless pub/sub | Event-driven architecture, high-reliability event delivery (within constrained domains) |
-| IV | Git FUSE | Planned | FUSE-based virtualized filesystem via Git OIDs | Virtualization, Lazy-loading and on-demand hydration |
-| V | Agent-Native Git | Planned | RAG and decision-tracking via Git history | AI infra, verifiable merkle trees for LLM memory |
-| VI | Git as Zero-Trust Gateway | Planned | AST-validation in `pre-receive` hooks | Shift-left security, moving trust to the transport layer |
+### Git As Foundation
 
-## Adult Supervision Required
+What even is Git? Before we can build complex applications on top of Git, we need a small set of primitives that treat Git as substrate.
 
-The posts in this series are about learning more than just how Git works under the hood. We aren't playing Macgyver with Git just for the fun of it; we do it to understand **how to think outside the box when conventional tools fail**.
+| Part | Title | Stunt | Lesson |
+|------|-------|--------|--------|
+| I | [git-cas](https://github.com/git-stunts/git-cas): Git as Blob Store | A content-addressable storage layer built directly on Git objects | Git’s primitive is the object database |
+| II | [git-warp](https://github.com/git-stunts/git-warp): Stateful Systems on Top of Immutable Objects | A higher-level state and traversal layer over Git’s immutable model | State can be constructed without pretending mutability exists |
 
-The most elegant solutions often come from looking at a tool you use every day and ask *"What else can this thing do?"*
+### Git As Engine
 
-While I wouldn't recommend replacing your production Postgres instance with a series of Git notes, the **mental models** we build here are universal. The ability to deconstruct a system to its primitives is one of the most valuable skills in an engineer's toolkit.
+Learn how to build applications that are powered by Git, not just versioned by it.
 
-So remember: try these stunts at your own risk! Whether you're here to learn or you just want to see how far Git can be stretched before it breaks, I hope you have as much fun reading this series as I had writing it. 
+| Part | Title |Stunt | Lesson |
+|------|-------|-------|--------|
+| III | Git Stargate: Git as Zero-Trust Gateway | AST-validation in `pre-receive` hooks | Shift-left security, moving trust to the transport layer |
+| IV |	Shiplog |	The Commit as a Structured Event Ledger	| Deployment provenance, policy enforcement, and tamper-evident audit trails |
+| V | [Git as CMS](https://github.com/git-stunts/git-cms) | Git's `commit-tree` doubles as a DB-less API | How to reduce operational complexity via protocols |
+| VI | Git as Key-Value Store | Offline-first KV-store using OIDs and Git notes | CAP theorem, consistency vs availability in distributed systems | 
 
-The one bit of advice I have before we get started is: when you're working on tools that directly interact with Git repos, **always** run the tests in Docker!
+### Git As System
 
-> [!note]
-> **Quick note on licenses:** Code will be made available under Apache 2.0 and all writing CC BY 4.0.  
-> Please steal freely, attribute honestly, and don't be weird. Well, don't be weird about this in particular.
+Can Git be infrastructure?
+
+| Part | Title | Stunt | Lesson |
+|------|-------|------|--------|
+| VII | Git as Bus | Using `post-receive` hooks for serverless pub/sub | Event-driven architecture, high-reliability event delivery (within constrained domains) |
+| VIII | Git FUSE | FUSE-based virtualized filesystem via Git OIDs | Virtualization, Lazy-loading and on-demand hydration |
+
+### Git Weird
+
+Make Git remember things.
+
+| Part | Title |Stunt | Lesson                                           |
+|------|-------|-------|--------|
+| IX | Agent-Native Git | RAG and decision-tracking via Git history | AI infra, verifiable Merkle trees for LLM memory |
+
+## Find New Ways To Use Old Tools
+
+When we look at a tool we use every day and ask *"What else can this thing do?"* sometimes we find surprising new ways to use them. The ability to deconstruct a system to its primitives is one of the most valuable skills in an engineer's toolkit.
+
+Whether you're here to learn or you just want to see how far Git can be stretched before it breaks, I hope you have as much fun reading this series as I had writing it. 
+
+Fork these repos and Git good.
+
+---
 
 Copyright © 2026 [James Ross](https://github.com/flyingrobots)
