@@ -2,7 +2,7 @@
 <img src="https://github.com/user-attachments/assets/90497885-d7f8-44af-b126-a449ee11e5a9" />
 </div>
 
-Version control is just Git's day job.
+# Version control is just Git's day job.
 
 If you understand that sentence, this series is for you. If you don’t, it will be by the end. Git is really a content-addressable filesystem with a directed acyclic graph (DAG) built on top.
 
